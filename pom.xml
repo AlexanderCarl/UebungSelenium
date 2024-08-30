@@ -11,9 +11,9 @@
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
-        
         <slf4j.version>2.0.16</slf4j.version>
         <log4j.version>2.23.1</log4j.version>
+        <test.container.version>1.20.0</test.container.version>
     </properties>
     
     <dependencies>
@@ -30,11 +30,19 @@
             <version>7.7.0</version>
             <scope>test</scope>
         </dependency>
-
+        
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.30</version>
+            <scope>test</scope>
+        </dependency>
+    
+        <!-- Testcontainers dependencies -->
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>selenium</artifactId>
+            <version>${test.container.version}</version>
             <scope>test</scope>
         </dependency>
         
