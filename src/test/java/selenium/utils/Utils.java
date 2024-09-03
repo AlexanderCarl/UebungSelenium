@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.FileReader;
+import java.io.InputStream;
 import java.util.Properties;
 
 public class Utils {
@@ -17,6 +18,7 @@ public class Utils {
     public static Properties getProp() {
         if (prop == null) {
             Properties local = new Properties();
+            // try (InputStream is = local.getClass().getResourceAsStream("application.properties")) does not work together with intelliJ debugging
             try (FileReader reader = new FileReader("src/test/resources/application.properties")) {
                 local.load(reader);
             } catch (Exception e) {

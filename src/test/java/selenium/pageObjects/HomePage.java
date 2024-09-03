@@ -1,11 +1,11 @@
-package selenium.pageobjects;
+package selenium.pageObjects;
 
 import lombok.Getter;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import selenium.pageobjects.common.BasePage;
+import selenium.pageObjects.common.BasePage;
 
 import java.time.Duration;
 

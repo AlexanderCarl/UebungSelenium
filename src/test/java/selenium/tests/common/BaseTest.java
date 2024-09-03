@@ -10,7 +10,7 @@ import org.testcontainers.containers.BrowserWebDriverContainer;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
-import selenium.pageobjects.HomePage;
+import selenium.pageObjects.HomePage;
 import selenium.utils.Browser;
 import selenium.utils.Utils;
 
