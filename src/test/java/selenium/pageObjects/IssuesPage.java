@@ -1,22 +1,21 @@
 package selenium.pageObjects;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import selenium.domainObjects.Issue;
 import selenium.pageObjects.common.BasePage;
-import selenium.utils.Utils;
 import selenium.utils.filters.IssuesLabelFilter;
 import selenium.utils.filters.IssuesSortByFilter;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class IssuesPage extends BasePage {
     
-    private final static String issueSelector = "//div[@aria-label='Issues']//div[starts-with(@id, 'issue_')]";
+    private static final String issueSelector = "//div[@aria-label='Issues']//div[starts-with(@id, 'issue_')]";
     
     public IssuesPage(WebDriver driver) {
         super(driver);
@@ -30,24 +29,20 @@ public class IssuesPage extends BasePage {
     }
     
     public void setSortByFilter(IssuesSortByFilter filter) {
-        // I tried different approaches with WebDriverWait but non did work - feedback would be very nice!
-        // new WebDriverWait(driver, Duration.ofSeconds(5))
-        //          .until(ExpectedConditions.elementToBeClickable(By.xpath("//details[@id='sort-select-menu']/summary")));
-
+        
         // Open SortMenu
-        Utils.workaround(500);
-        driver.findElement(By.xpath("//details[@id='sort-select-menu']/summary")).click();
+        new WebDriverWait(driver, Duration.ofSeconds(3))
+                .until((WebDriver driver) -> {
+                   try {
+                       driver.findElement(By.xpath("//details[@id='sort-select-menu']")).click();
+                       return true;
+                   } catch (StaleElementReferenceException e) {
+                       return false;
+                   }
+                });
         
         // Set SortMenu
         driver.findElement(By.xpath("//details[@id='sort-select-menu']/summary/../details-menu//div[contains(@class, 'SelectMenu-list')]/a[contains(@class, 'SelectMenu-item')]/span[contains(text(), '" + filter.getLabel() + "')]")).click();
-        Utils.workaround(500);
-    }
-    
-    // Eine gute Idee aber die Testdauer hat sich hiermit fast verdoppelt, da viel mehr Daten geladen werden als gebraucht werden. Es wird nur das 0-Elemente und die comments benötigt.
-    public List<Issue> getAllShownIssues() {
-        List<WebElement> elements = driver.findElements(By.xpath(issueSelector));
-        
-        return elements.stream().map(this::getDataFromIssuesElement).toList();
     }
     
     public Issue getIssue(int index) {
@@ -57,9 +52,22 @@ public class IssuesPage extends BasePage {
     }
     
     public List<Integer> getAllShownIssuesComments() {
-        List<WebElement> elements = driver.findElements(By.xpath(issueSelector));
+        final List<Integer> numberOfComments = new ArrayList<>();
         
-        return elements.stream().map(ele -> Integer.parseInt(ele.findElement(By.xpath(".//a/span[contains(@class, 'text-small')]")).getText())).toList();
+        new WebDriverWait(driver, Duration.ofSeconds(3))
+                .until((WebDriver driver) -> {
+                   try {
+                       List<WebElement> elements = driver.findElements(By.xpath(issueSelector));
+                       List<Integer> comments = elements.stream().map(ele -> Integer.parseInt(ele.findElement(By.xpath(".//a/span[contains(@class, 'text-small')]")).getText())).toList();
+                       numberOfComments.addAll(comments);
+                       
+                       return true;
+                   } catch (StaleElementReferenceException e) {
+                       return false;
+                   }
+                });
+        
+        return numberOfComments;
     }
 
     @Override

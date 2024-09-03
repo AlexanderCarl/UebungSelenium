@@ -42,14 +42,6 @@ public class Utils {
         
         return Browser.CHROME;
     }
-    
-    public static void workaround(int millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
 
 

@@ -34,7 +34,6 @@ public class GithubTests extends BaseTest {
         issuesPage.setSortByFilter(IssuesSortByFilter.MOST_COMMENTED);
         
         // Step 4
-        Utils.workaround(500);
         List<Integer> sortedIssuesComments = issuesPage.getAllShownIssuesComments();
         if (!sortedIssuesComments.isEmpty()) {
             boolean isDescending = IntStream.range(0, sortedIssuesComments.size() - 1)
