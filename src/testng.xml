@@ -1,0 +1,22 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="SuiteName" parallel="tests" thread-count="2">
+    <test name="Test1">
+        <classes>
+            <class name="selenium.tests.GithubTests">
+                <methods>
+                    <include name="displayHomepage" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test name="Test2">
+        <classes>
+            <class name="selenium.tests.GithubTests">
+                <methods>
+                    <include name="filterIssues" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <!-- Add more tests as needed -->
+</suite>
