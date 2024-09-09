@@ -1,19 +1,20 @@
 package selenium.tests;
 
+import com.google.common.collect.Comparators;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import selenium.domainObjects.Issue;
 import selenium.pageObjects.HomePage;
+import selenium.pageObjects.IssuesEntryPage;
 import selenium.pageObjects.IssuesPage;
 import selenium.tests.common.BaseTest;
 import selenium.utils.Utils;
 import selenium.utils.filters.IssuesLabelFilter;
 import selenium.utils.filters.IssuesSortByFilter;
 
+import java.util.Comparator;
 import java.util.List;
-import java.util.stream.IntStream;
 
 public class GithubTests extends BaseTest {
 
@@ -42,21 +43,17 @@ public class GithubTests extends BaseTest {
         issuesPage.setSortByFilter(IssuesSortByFilter.MOST_COMMENTED);
     
         // Step 3
-        List<Integer> sortedIssuesComments = issuesPage.getAllShownIssuesComments();
-        if (!sortedIssuesComments.isEmpty()) {
-            boolean isDescending = IntStream.range(0, sortedIssuesComments.size() - 1)
-                    .allMatch(i -> sortedIssuesComments.get(i) >= sortedIssuesComments.get(i + 1));
-            Assert.assertTrue(isDescending, "The Issues should be ordered from the most commented to the least commented ones.");
-        }
+        List<Integer> sortedIssuesComments = issuesPage.getAmountOfIssuesComments();
+        boolean isDescending = Comparators.isInOrder(sortedIssuesComments, Comparator.<Integer>naturalOrder().reversed());
+        Assert.assertTrue(isDescending, "The Issues should be ordered from the most commented to the least commented ones.");
     
         // Step 4
-        Issue issue = issuesPage.getIssue(0);
-        String tags = String.join(" ", issue.tags());
-        String issueInfo = "Most commentend infos:" +
-                "\nTitle: " + issue.header() +
-                "\ntags: " + tags +
+        IssuesEntryPage issue = issuesPage.getIssue(0);
+        String issueInfo = "Most commented infos:" +
+                "\nTitle: " + issue.getTitle() +
+                "\ntags: " + String.join(" ", issue.getTags()) +
                 "\nopened: " + issue.shortInfo();
-    
+        
         logger.info(issueInfo);
     }
 }

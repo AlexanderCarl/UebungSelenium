@@ -28,15 +28,12 @@ public class BaseTest {
     
     @BeforeTest
     public void prepareInit() {
-        prop = Utils.getProp();
-        baseUrl = prop.getProperty("baseUrl");
-    }
-    
-    @BeforeTest
-    public void baseInit() {
         tlDriver.set(getDriver(Utils.getConfiguredBrowser()));
         tlDriver.get().manage().timeouts().implicitlyWait(Duration.ofSeconds(1));
         tlDriver.get().manage().window().maximize();
+        
+        prop = Utils.getProp();
+        baseUrl = prop.getProperty("baseUrl");
     }
     
     // Necessary as multiple tests are run in a row while the container & driver is alive for all tests of a test-path e.g. Test1 & Test2

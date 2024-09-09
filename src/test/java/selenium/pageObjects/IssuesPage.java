@@ -3,7 +3,6 @@ package selenium.pageObjects;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import selenium.domainObjects.Issue;
 import selenium.pageObjects.common.BasePage;
 import selenium.utils.filters.IssuesLabelFilter;
 import selenium.utils.filters.IssuesSortByFilter;
@@ -11,7 +10,6 @@ import selenium.utils.filters.IssuesSortByFilter;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class IssuesPage extends BasePage {
     
@@ -45,13 +43,13 @@ public class IssuesPage extends BasePage {
         driver.findElement(By.xpath("//details[@id='sort-select-menu']/summary/../details-menu//div[contains(@class, 'SelectMenu-list')]/a[contains(@class, 'SelectMenu-item')]/span[contains(text(), '" + filter.getLabel() + "')]")).click();
     }
     
-    public Issue getIssue(int index) {
-        List<WebElement> elements = driver.findElements(By.xpath(issueSelector));
+    public IssuesEntryPage getIssue(int index) {
+        WebElement issueEntry = driver.findElements(By.xpath(issueSelector)).get(index);
         
-        return this.getDataFromIssuesElement(elements.get(index));
+        return new IssuesEntryPage(driver, issueEntry);
     }
     
-    public List<Integer> getAllShownIssuesComments() {
+    public List<Integer> getAmountOfIssuesComments() {
         final List<Integer> numberOfComments = new ArrayList<>();
         
         new WebDriverWait(driver, Duration.ofSeconds(3))
@@ -76,13 +74,4 @@ public class IssuesPage extends BasePage {
                 .until(ExpectedConditions.visibilityOfElementLocated(By.id("js-issues-search")));
     }
     
-    private Issue getDataFromIssuesElement(WebElement element) {
-        String title = element.findElement(By.xpath(".//a[starts-with(@id, 'issue_')]")).getText();
-        List<String> tags = element.findElements(By.xpath(".//a[starts-with(@id, 'label-')]"))
-                .stream().map(WebElement::getText).toList();
-        String shortInfo = element.findElement(By.xpath(".//span[contains(@class, 'opened-by')]")).getText();
-        int numberOfComments = Integer.parseInt(element.findElement(By.xpath(".//a/span[contains(@class, 'text-small')]")).getText());
-        
-        return new Issue(title, tags, shortInfo, numberOfComments);
-    }
 }
