@@ -1,15 +1,12 @@
 package selenium.tests;
 
 import com.google.common.collect.Comparators;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import selenium.pageObjects.HomePage;
 import selenium.pageObjects.IssuesEntryPage;
 import selenium.pageObjects.IssuesPage;
 import selenium.tests.common.BaseTest;
-import selenium.utils.Utils;
 import selenium.utils.filters.IssuesLabelFilter;
 import selenium.utils.filters.IssuesSortByFilter;
 
@@ -17,14 +14,12 @@ import java.util.Comparator;
 import java.util.List;
 
 public class GithubTests extends BaseTest {
-
-    private static final Logger logger = LoggerFactory.getLogger(Utils.class);
     
     @Test
     public void displayHomepage() {
         
         // Step 1
-        HomePage homePage = this.defaultLogin();
+        HomePage homePage = this.openHomePage();
     
         // Step 2
         logger.info("There are " + homePage.getBoardPage().getNumberOfCommits() + " number of commits");
@@ -35,7 +30,7 @@ public class GithubTests extends BaseTest {
     public void filterIssues() {
         
         // Step 1
-        HomePage homePage = this.defaultLogin();
+        HomePage homePage = this.openHomePage();
     
         // Step 2
         IssuesPage issuesPage = homePage.getHeaderPage().goToIssues();

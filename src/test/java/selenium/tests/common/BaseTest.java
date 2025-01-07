@@ -6,6 +6,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.BrowserWebDriverContainer;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterTest;
@@ -20,14 +22,15 @@ import java.util.Properties;
 public class BaseTest {
     
     private static final Browser browser = Utils.getConfiguredBrowser();
-    private static ThreadLocal<WebDriver> tlDriver = new ThreadLocal<>();
-    private static ThreadLocal<BrowserWebDriverContainer> tlContainer = new ThreadLocal<>();
+    private static final ThreadLocal<WebDriver> tlDriver = new ThreadLocal<>();
+    private static final ThreadLocal<BrowserWebDriverContainer> tlContainer = new ThreadLocal<>();
+    protected static final Logger logger = LoggerFactory.getLogger(BaseTest.class);
     protected Properties prop;
 
     protected String baseUrl;
     
     @BeforeTest
-    public void prepareInit() {
+    public void init() {
         tlDriver.set(getDriver(Utils.getConfiguredBrowser()));
         tlDriver.get().manage().timeouts().implicitlyWait(Duration.ofSeconds(1));
         tlDriver.get().manage().window().maximize();
@@ -64,7 +67,7 @@ public class BaseTest {
         }
     }
     
-    public HomePage defaultLogin() {
+    protected HomePage openHomePage() {
         WebDriver driver = tlDriver.get();
         driver.get(baseUrl);
         
